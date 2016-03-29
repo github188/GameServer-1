@@ -117,7 +117,6 @@ int base_start(struct base *base)
                 continue;
             else
                 break;
-            printf("eintr\n");
         }
        
         int t = 0;
@@ -151,7 +150,7 @@ int base_start(struct base *base)
             }
             else if (events[i].events & EPOLLIN || events[i].events & EPOLLOUT) {                       //处理IO事件
                 struct event ioEnt;
-                if (list_find(base->ioevent_head, entId, &ioEnt) < 0)
+                if (list_find(base->ioevent_head, entId, &ioEnt) < 0) 
                     return -1;
                 list_push(&base->activevent_head, &ioEnt);
                 base->num_active_event++;
@@ -186,6 +185,7 @@ int list_push(struct event **head, struct event *ent)
     struct event *event = (struct event *)malloc(sizeof(struct event));
     memcpy(event ,ent, sizeof(struct event));
 
+    event->next = NULL;
     if (*head == NULL) {
         *head = event;
     }
@@ -194,7 +194,6 @@ int list_push(struct event **head, struct event *ent)
         while (pFind->next)
             pFind = pFind->next;
         pFind->next = event;
-        event->next = NULL;
     }
     return 0;
 }
